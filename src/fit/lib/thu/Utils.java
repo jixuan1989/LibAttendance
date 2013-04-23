@@ -57,12 +57,22 @@ public class Utils {
 		publicUsers.put("殷明", "殷明、钟雨");
 		publicUsers.put("钟雨", "殷明、钟雨");
 	}
+	/**
+	 * 如果转化出错 则返回-1（新入职人员，第一次打开，显示入职，而非时间。。。）
+	 * @param time
+	 * @return
+	 */
 	public static double timeToDouble(String time) {
 		if(time==null){
 			return -1;
 		}
 		String[] times = time.split(":");
-		return Integer.parseInt(times[0]) + Double.parseDouble(times[1]) / 60;
+		try{
+			return Integer.parseInt(times[0]) + Double.parseDouble(times[1]) / 60;
+		}catch(java.lang.NumberFormatException e){
+			System.err.println(e.getMessage());
+			return -1;
+		}
 	}
 	
 }

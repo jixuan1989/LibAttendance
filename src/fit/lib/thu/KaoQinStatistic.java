@@ -12,12 +12,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import jxl.Cell;
@@ -25,7 +24,6 @@ import jxl.CellType;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
-import jxl.biff.FontRecord;
 import jxl.format.Alignment;
 import jxl.format.Border;
 import jxl.format.BorderLineStyle;
@@ -476,7 +474,7 @@ public class KaoQinStatistic {
 				users.put(name, user);
 			}
 			// 后续全是时间，一天一列
-			for (int d = 0, colIndex = beginCol; colIndex < endCol; colIndex++, d++) {// 列
+			for (int d = 0, colIndex = beginCol; colIndex <= endCol; colIndex++, d++) {// 列
 				cell = sheet.getCell(colIndex, rowIndex);
 				String secondTimeTmp[]=new String[1];
 				content = cell.getContents();
@@ -509,7 +507,13 @@ public class KaoQinStatistic {
 	
 	public static void main(String[] args) throws BiffException, IOException,
 	ParseException, RowsExceededException, WriteException {
-		String src=JOptionPane.showInputDialog("请输入源文件绝对路径","E:\\tmp\\考勤\\测试1.xls");
+		JFileChooser chooser=new JFileChooser(new File("E:\\tmp\\考勤"));
+		chooser.setVisible(true);
+		int returnFile=chooser.showOpenDialog(null);
+		if(returnFile!=JFileChooser.APPROVE_OPTION){
+			System.exit(1);
+		}
+		String src= chooser.getSelectedFile().getAbsolutePath();
 		String begin=JOptionPane.showInputDialog("请输入开始统计的时间列名（含该列）（区分大小写)","D");
 		String end=JOptionPane.showInputDialog("请输入结束统计的时间列名（含该列）（区分大小写)","J");
 		Map<String,User>users=parserExcelToUsers(src,begin,end,false);
@@ -521,6 +525,9 @@ public class KaoQinStatistic {
 		Collections.sort(sortPublicUsers, new User());
 		sortUsers.addAll(sortPublicUsers);
 		String dest=JOptionPane.showInputDialog("请输入结果文件的保存绝对路径","E:\\tmp\\考勤\\结果1.xls");
+		for(User user:sortUsers){
+			System.out.println(user);
+		}
 		writeIntoExcel(dest,sortUsers);
 		JOptionPane.showMessageDialog(null, "done!");
 		try {  
@@ -590,7 +597,7 @@ public class KaoQinStatistic {
 		Colour[][] colours=new Colour[][]{{Colour.GRAY_25,Colour.GRAY_50},{Colour.GREY_25_PERCENT,Colour.GREY_40_PERCENT}};
 		int level=1;
 		for(User user:sortUsers){
-			System.out.println(row+":"+user.getName());
+			//System.out.println(row+":"+user.getName());
 			if(level!=user.getLevel()){
 				row++;
 				level=user.getLevel();

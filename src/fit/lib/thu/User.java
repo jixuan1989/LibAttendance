@@ -113,8 +113,19 @@ public class User  implements Comparator<User>{
 		}
 		else return records.get(day)[flag][upDown];
 	}
+	/**
+	 * 
+	 * @param day
+	 * @param flag
+	 * @return
+	 */
 	public double getLong(int day,int flag){
-		double result=Utils.timeToDouble(records.get(day)[flag][1])-Utils.timeToDouble(records.get(day)[flag][0]);
+		double up=Utils.timeToDouble(records.get(day)[flag][0]);
+		double down=Utils.timeToDouble(records.get(day)[flag][1]);
+		if(up==-1||down==-1){
+			return 0;
+		}
+		double result=down-up;
 		switch (flag) {
 		case 3:
 			result*=0.85;
