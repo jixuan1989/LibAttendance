@@ -42,8 +42,8 @@ public class Utils {
 		publicUsers.put("刘璋", "刘璋、郭雨晨");
 		publicUsers .put("余志伟", "余志伟、赵凯");
 		publicUsers .put("赵凯", "余志伟、赵凯");
-		publicUsers.put("宋亮", "宋亮、吕程");
-		publicUsers.put("吕程", "宋亮、吕程");
+		publicUsers.put("翁健夫", "翁健夫、吕成");
+		publicUsers.put("吕成", "翁健夫、吕成");
 		publicUsers.put("沈晓明", "沈晓明、葛斯涵");
 		publicUsers.put("葛斯涵", "沈晓明、葛斯涵");
 		publicUsers.put("窦蒙", "窦蒙、王子旋");
