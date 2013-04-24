@@ -59,10 +59,12 @@ public class User  implements Comparator<User>{
 		double t = Utils.timeToDouble(time);
 		String[][] times=records.get(dayIndex);
 		for (int i = 0; i < 4; i++) {
-			if (t >= Utils.upTime[i] && t <= Utils.defaultUpTime[i]) {
+			if (t >= Utils.upTime[i] && t <= Utils.defaultUpTime[i] &&times[i][0]==null) {//对于签到来说，第一次为准
 				times[i][0] = time;
-			} else if (t >= Utils.defaultDownTime[i] && t <= Utils.downTime[i]) {
+				return;
+			} else if (t >= Utils.defaultDownTime[i] && t <= Utils.downTime[i]) {//对于签退来说，最后一次为准
 				times[i][1] = time;
+				return;
 			}
 		}
 	}
