@@ -83,6 +83,9 @@ public class User  implements Comparator<User>{
 		}
 		if(times[3][0]!=null){
 			times[2][1]=Utils.downSections[2];
+			if(times[2][0]==null){
+				times[2][0]=Utils.defaultUpSections[2];
+			}
 		}
 	}
 

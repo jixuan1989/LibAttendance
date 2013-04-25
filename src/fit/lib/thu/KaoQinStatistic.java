@@ -503,8 +503,8 @@ public class KaoQinStatistic {
 		}
 		return users;
 	}
-	
-	
+
+
 	public static void main(String[] args) throws BiffException, IOException,
 	ParseException, RowsExceededException, WriteException {
 		JFileChooser chooser=new JFileChooser(new File("E:\\tmp\\考勤"));
@@ -516,31 +516,32 @@ public class KaoQinStatistic {
 		String src= chooser.getSelectedFile().getAbsolutePath();
 		String begin=JOptionPane.showInputDialog("请输入开始统计的时间列名（含该列）（区分大小写)","D");
 		String end=JOptionPane.showInputDialog("请输入结束统计的时间列名（含该列）（区分大小写)","J");
-		Map<String,User>users=parserExcelToUsers(src,begin,end,false);
-		ArrayList<User>sortUsers=new ArrayList<User>(users.values());
-		Collections.sort(sortUsers, new User());
-		//重新统计那些公用座位的同学和
-		Map<String,User>publicusers=parserExcelToUsers(src,begin,end,true);
-		ArrayList<User>sortPublicUsers=new ArrayList<User>(publicusers.values());
-		Collections.sort(sortPublicUsers, new User());
-		sortUsers.addAll(sortPublicUsers);
-		String dest=JOptionPane.showInputDialog("请输入结果文件的保存绝对路径","E:\\tmp\\考勤\\结果1.xls");
-		for(User user:sortUsers){
-			System.out.println(user);
-		}
-		writeIntoExcel(dest,sortUsers);
-		JOptionPane.showMessageDialog(null, "done!");
-		try {  
-            String[] cmd = new String[5];  
-            cmd[0] = "cmd";  
-            cmd[1] = "/c";  
-            cmd[2] = "start";  
-            cmd[3] = " ";  
-            cmd[4] = new File(dest).getParent();  
-            Runtime.getRuntime().exec(cmd);  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
+		try { 
+			Map<String,User>users=parserExcelToUsers(src,begin,end,false);
+			ArrayList<User>sortUsers=new ArrayList<User>(users.values());
+			Collections.sort(sortUsers, new User());
+			//重新统计那些公用座位的同学和
+			Map<String,User>publicusers=parserExcelToUsers(src,begin,end,true);
+			ArrayList<User>sortPublicUsers=new ArrayList<User>(publicusers.values());
+			Collections.sort(sortPublicUsers, new User());
+			sortUsers.addAll(sortPublicUsers);
+			String dest=JOptionPane.showInputDialog("请输入结果文件的保存绝对路径","E:\\tmp\\考勤\\结果1.xls");
+			for(User user:sortUsers){
+				System.out.println(user);
+			}
+			writeIntoExcel(dest,sortUsers);
+			JOptionPane.showMessageDialog(null, "done!");
+
+			String[] cmd = new String[5];  
+			cmd[0] = "cmd";  
+			cmd[1] = "/c";  
+			cmd[2] = "start";  
+			cmd[3] = " ";  
+			cmd[4] = new File(dest).getParent();  
+			Runtime.getRuntime().exec(cmd);  
+		} catch (Exception e) {  
+			e.printStackTrace();  
+		}  
 		System.exit(1);
 	}
 
@@ -550,7 +551,7 @@ public class KaoQinStatistic {
 		WritableSheet ws1 = wwb.createSheet("考勤统计", 0);
 		ws1.addCell(new Label(0, 0, "生成日期："));
 		ws1.setColumnView(0, 20);
-		insertOneCellData(ws1, 1, 0, new SimpleDateFormat("yyyy-MM-dd").format(new Date()), getDataCellFormat(CellType.DATE));
+		insertOneCellData(ws1, 1, 0, new SimpleDateFormat("yyyy-MM-dd HH点").format(new Date()), getDataCellFormat(CellType.DATE));
 		ws1.addCell(new Label(0, 1, "分类"));
 		ws1.setColumnView(1, 10);
 		ws1.addCell(new Label(1, 1, "姓名"));
@@ -579,7 +580,7 @@ public class KaoQinStatistic {
 		ws2.addCell(new Label(1, 1, "姓名"));
 		ws2.setColumnView(1, 10);
 
-		
+
 		int realDay=beginOfDay;
 		double[][] time=new double[totalDays][5];
 		WritableCellFormat  format;
@@ -606,10 +607,10 @@ public class KaoQinStatistic {
 			insertOneCellData(ws2, 1, row, user.getName(), getDataCellFormat(CellType.STRING_FORMULA));
 			time=user.getTime();
 			for(int day=0;day<user.getRecords().size();day++){
-//				for(int j=0;j<4;j++){
-//					time[day][j]=user.getLong(day, j);
-//				}
-//				time[day][4]=time[day][0]+time[day][1]+time[day][2]+time[day][3];
+				//				for(int j=0;j<4;j++){
+				//					time[day][j]=user.getLong(day, j);
+				//				}
+				//				time[day][4]=time[day][0]+time[day][1]+time[day][2]+time[day][3];
 				format=getDataCellFormat(CellType.STRING_FORMULA);
 				format.setBackground(colours[row%2][day%2]);
 				insertOneCellData(ws2,  day*4+2, row, user.toString(day, 0, 0)+"\n"+user.toString(day, 0, 1),  format);
@@ -617,11 +618,11 @@ public class KaoQinStatistic {
 				insertOneCellData(ws2,  day*4+4, row, user.toString(day, 2, 0)+"\n"+user.toString(day, 2, 1),  format);
 				insertOneCellData(ws2,  day*4+5, row, user.toString(day, 3, 0)+"\n"+user.toString(day, 3, 1),  format);
 			}
-//			double[] total=new double[]{0,0,0,0,0};
-//			for(int i=0;i<totalDays;i++){
-//				for(int j=0;j<5;j++)
-//					total[j]+=time[i][j];
-//			}
+			//			double[] total=new double[]{0,0,0,0,0};
+			//			for(int i=0;i<totalDays;i++){
+			//				for(int j=0;j<5;j++)
+			//					total[j]+=time[i][j];
+			//			}
 			format=getDataCellFormat(CellType.STRING_FORMULA);format.setBackground(Colour.WHITE);
 			insertOneCellData(ws1, 0, row, user.getType(), format);
 			format=getDataCellFormat(CellType.STRING_FORMULA);format.setBackground(Colour.LIGHT_ORANGE);
