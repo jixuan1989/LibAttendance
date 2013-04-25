@@ -82,10 +82,13 @@ public class User  implements Comparator<User>{
 			}
 		}
 		if(times[3][0]!=null){
-			times[2][1]=Utils.downSections[2];
 			if(times[2][0]==null){
 				times[2][0]=Utils.defaultUpSections[2];
 			}
+			//if(times[2][0]!=null){//也就是说 如果只有夜里的记录的话，那么你晚上至少应该有一个记录才行
+				times[2][1]=Utils.downSections[2];
+			//}
+			
 		}
 	}
 
