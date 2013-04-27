@@ -59,10 +59,17 @@ public class User  implements Comparator<User>{
 		double t = Utils.timeToDouble(time);
 		String[][] times=records.get(dayIndex);
 		for (int i = 0; i < 4; i++) {
-			if (t >= Utils.upTime[i] && t <= Utils.defaultUpTime[i] &&times[i][0]==null) {//对于签到来说，第一次为准
+			if (t >= Utils.upTime[i] && t <= Utils.defaultUpTime[i]) {//对于签到来说，第一次为准
+				if(times[i][0]!=null&&t>Utils.timeToDouble(times[i][0])){
+					return;
+				}
 				times[i][0] = time;
 				return;
 			} else if (t >= Utils.defaultDownTime[i] && t <= Utils.downTime[i]) {//对于签退来说，最后一次为准
+				//当统计公用座位时，需要判断现有时刻是否小于前一人的时刻
+				if(times[i][1]!=null&&t<Utils.timeToDouble(times[i][1])){
+					return;
+				}
 				times[i][1] = time;
 				return;
 			}
@@ -145,10 +152,10 @@ public class User  implements Comparator<User>{
 	}
 	public int getOnlineDays(){
 		int result=0;
-		boolean online=false;
 		for(String[][] day:records){
+			boolean online=false;
 			for(int i=0;i<day.length;i++){
-				online=online||day[i][0]!=null;
+				online=(online||day[i][0]!=null);
 			}
 			if(online)
 				result++;
